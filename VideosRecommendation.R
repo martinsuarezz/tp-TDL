@@ -57,11 +57,11 @@ programa <- function(){
   #Cantidad de peliculas a recomendar
   top_recommendations <- 10
   
-  size(testing_data)
+  user <- dim(testing_data)[1] - 1
   
   #Recomendaciones para el usuario elegido.
   predicted_recommendations <- predict(object = recommendation_model,newdata = testing_data,n = top_recommendations)
-  userSelected <- predicted_recommendations@items[[532]]
+  userSelected <- predicted_recommendations@items[[user]]
   moviesUserSelected <- predicted_recommendations@itemLabels[userSelected]
   moviesUserSelectedAux <- moviesUserSelected
   
@@ -70,7 +70,7 @@ programa <- function(){
   }
   
   print(moviesUserSelectedAux)
-
+  
 }
 
 procesadoInformacion <- function(){
@@ -84,10 +84,9 @@ procesadoInformacion <- function(){
   # Transformo la matriz para poder usarla con recommenderlab
   ratingMatrix <- as(ratingMatrix, "realRatingMatrix")
   
-  movie_ratings <- ratingMatrix[rowCounts(ratingMatrix) > 5,colCounts(ratingMatrix) > 5]
+  movie_ratings <- ratingMatrix[rowCounts(ratingMatrix) > 10,colCounts(ratingMatrix) > 10]
   image(movie_ratings[1:10,1:10])
 }
 
 #----------------------------------------------------------------------
 main()
-
