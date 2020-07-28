@@ -1,0 +1,346 @@
+---
+title: "Presentacion Martin Suarez"
+author: "Martin"
+date: "17/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(lobstr)
+```
+
+## ¿Por qué usar R?
+
+- Es libre y de código abierto.
+- Tiene una comunidad muy fuerte.
+- Posee una gran catidad de librerías de análisis estadístico, ML, visualización de información.
+- Tiene paquetes muy interesantes, RStudio es un IDE muy completo, RMarkdown permite mostrar fácilmente resultados obtenidos y Shiny permite realizar apps web.
+
+## ¿Por qué no usar R?
+
+- No es un lenguaje muy eficiente. No es demasiado rápido y usa bastante memoria.
+- Al ser muy usado en Machine Learning mucho del código que uno puede encontrar no está muy bien estructurado.
+- Programar en R sin tener los concomientos de como funciona el lenguaje puede producir código **extremadamente lento**.
+
+## Para entender un poco R
+
+>“To understand computations in R, two slogans are helpful:
+>
+> * Everything that exists is an object.
+> * Everything that happens is a function call."
+>
+>— John Chambers
+>
+> <img src="https://statweb.stanford.edu/~jmc4/CopyPhoto.jpg" width="250" height="250"/>
+
+## Manejo de la memoria
+
+Entender como R maneja internamente la memoria es fundamental para realizar código eficiente. Por ejemplo, los ciclos `for()` tienen fama de ser extremadamente lentos en este lenguaje, esto es provocado por como se maneja la memoria y como se debe escribir código para evitar incovenientes.
+
+R funciona, similarmente a otros lenguajes, con referencias. Por ejemplo:
+
+```{r}
+x <- c(1, 2, 3)
+```
+
+Este código dice que `x` ahora referencia al vector (1, 2, 3)
+
+![](https://d33wubrfki0l68.cloudfront.net/bd90c87ac98708b1731c92900f2f53ec6a71edaf/ce375/diagrams/name-value/binding-1.png)
+
+```{r}
+y <- x
+```
+
+Ahora tanto `x` como `y` referencian a la misma posición de memoria.
+
+![](https://d33wubrfki0l68.cloudfront.net/bdc72c04d3135f19fb3ab13731129eb84c9170af/f0ab9/diagrams/name-value/binding-2.png)
+
+```{r}
+obj_addr(x)
+obj_addr(y)
+```
+Ahora modifiquemos un valor de `x`
+
+```{r}
+x[1] = 10
+x
+```
+```{r}
+y
+```
+`y` sigue haciendo referencia al vector original, no se modificó.
+
+```{r}
+obj_addr(x)
+obj_addr(y)
+```
+Ahora `y` sigue apuntando a la misma dirección de memoria original, sin embargo `x` cambió. Lo que sucedió al modificar `x`, es que R creó una copia del mismo. Tiene un comportamiento de **copia en modificación** (copy-on-modify).
+
+### Listas
+
+En las listas sucede algo similar. La única diferencia es que en la lista se guardan referencias a los elementos.
+
+```{r}
+l1 <- list(1, 2, 3)
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/dae84980f1586fc4ef47091c91f51a5737b38135/a1403/diagrams/name-value/list.png)
+```{r}
+l2 <- l1
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/52bc0e3da3382cba957a9d83397b6c9200906ce2/c72aa/diagrams/name-value/l-modify-1.png)
+
+```{r}
+l2[[3]] <- 4
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/b844bb5a3443e1344299627f5760e2ae3a9885b5/e1c76/diagrams/name-value/l-modify-2.png)
+
+Al realizar esta modificación se realiza una copia de la lista. La copia sin embargo, no es profunda, solo se copian las referencias a los objetos y no los objetos en sí.
+
+![](https://d33wubrfki0l68.cloudfront.net/b844bb5a3443e1344299627f5760e2ae3a9885b5/e1c76/diagrams/name-value/l-modify-2.png)
+
+### Dataframes
+
+Los dataframes son listas de vectores, por lo tanto se comportan similar que las listas.
+
+```{r}
+d1 <- data.frame(x = c(1, 5, 6), y = c(2, 4, 3))
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/80d8995999aa240ff4bc91bb6aba2c7bf72afc24/95ee6/diagrams/name-value/dataframe.png)
+
+Al modificar una columna, se crea una nueva copia de la misma.
+
+```{r}
+d2 <- d1
+d2[, 2] <- d2[, 2] * 2
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/c19fd7e31bf34ceff73d0fac6e3ea22b09429e4a/23d8d/diagrams/name-value/d-modify-c.png)
+
+Sin embargo, al modificar una fila, se deben copiar nuevamente todas las columnas.
+
+```{r}
+d3 <- d1
+d3[1, ] <- d3[1, ] * 3
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/36df61f54d1ac62e066fb814cb7ba38ea6047a74/facf8/diagrams/name-value/d-modify-r.png)
+
+Esto puede provocar que cierto tipo de código corra extremadamente lento. Por ejemplo, un `for` que recorra todo el dataframe y a cada fila le aplique una función, puede llegar a hacer varias copias de todo el dataframe en cada iteración.
+
+Una solución a esto es convertir los dataframes a listas. El funcionamiento de las listas está implementado con optimizaciones en C que evitan el comportamiento de copy-on-modify y pueden realizar modifcaciones in-place.
+
+Otra solución posible es evitar cuando sea posible el uso de ciclos `for`, `while`, y tratar de programar en un esquema más funcional, con funciones como `vapply()`.
+
+## Tamaño en memoria
+
+R, al funcionar con referencias, hace que el tamaño de muchos objetos sea menor al que uno creería.
+
+```{r}
+x <- runif(100)
+obj_size(x)
+```
+```{r}
+y <- list(x, x, x)
+obj_size(y)
+```
+También existen optimizaciones con las cadenas de caracteres. R no almacena strings, sino referencias a las mismas.
+
+```{r}
+saludo = "hola"
+obj_size(saludo)
+```
+```{r}
+saludo2 = rep("hola", 100)
+obj_size(saludo2)
+```
+
+
+## Sistema de errores
+
+R posee los clásicos manejos de excepciones que existen en lenguajes como Java, C++, Python. Sin embargo, el sistema de R es más flexible y permite la aplicación de *restarts*, un sistema similar al utilizado en Common Lisp.
+
+### Conceptos básicos de excepciones
+
+Para lanzar excepciones, R contiene 3 funciones:
+- `stop()`: Indica errores que detienen la ejecución.
+- `warning()`: Indica advertencias que no detienen la ejecución.
+- `message()`: Tampoco detienen la ejecución, se utilizan para darle información útil al usuario.
+
+Un ejemplo básico:
+```{r error=TRUE}
+my_log <- function(num){
+  if (num <= 0) {stop("No se puede calcular el logaritmo!")}
+  else {log(num)}
+}
+
+my_log(-5)
+```
+### Manejo de expeciones
+
+El clásico paradigma de manejo de excepciones existe en R. Las funciones `try()`, `tryCatch()` permiten atrapar expeciones e ignorarlas o manejarlas.
+
+```{r error=TRUE}
+{
+  my_log(-5)
+  10
+}
+```
+
+```{r}
+{
+  try(my_log(-5))
+  10
+}
+
+```
+Como se ve en estos ejemplos, `try()` muestra por consola el error pero continúa normalmente la ejecución del código. Se puede, con el parámetro `silent=TRUE` que `try()` no muestre el error.
+
+```{r}
+
+tryCatch(my_log(-5),
+         error = function(e) "Hubo un error",
+         warning = function(e) "Hubo una advertencia",
+         message = function(e) "Hubo un mensaje"
+)
+
+```
+
+`tryCatch()` funciona similar a otros lenguajes, recibe el codigo a ejecutar y las distintas maneras de resolver el error.
+
+### Handlers de salida vs Handlers de llamada
+
+`withCallingHandlers()`permite definir handlers que luego de ser ejecutados, continúa con la ejecución normal del código. `tryCatch()`por el contrario, detiene la ejecución del código que lanzó la excepción y no continúa con la misma.
+
+```{r}
+
+withCallingHandlers(
+  {
+    message("Mando un mensaje")
+    2 + 4
+  },
+  message = function(e) print("Hubo un mensaje")
+)
+
+```
+```{r}
+tryCatch(
+  {
+    message("Mando un mensaje")
+    2 + 4
+  },
+  message = function(e) print("Hubo un mensaje")
+)
+```
+
+### Manejo de errores avanzado: condiciones y reinicios
+
+R va más allá del manejo tradicional de errores con la introducción de condiciones y reinicios (*conditions* y *restarts*). Esto otorga un sistema mucho más flexible. 
+
+Los sistemas tradicionales basan su manejo de errores en dos partes de código: la parte encargada del lanzamiento de excepeciones (el clásico `throw()`) y la parte que se encarga de manejarlo (el `catch()`). 
+
+El sistema de condiciones divide el problema en tres partes: una se encarga de lanzar el error, otra se encarga de decidir que estrategia de recuperación utilizar, y otra se encarga de llevar a cabo dicha estrategia.
+
+### Condiciones
+
+Condiciones serían un método para el programador de implementar sus propios errores. Similar a heredar de std::exception en C++ o de Exception en Java.
+
+Las condiciones son objetos S3, cuya clase suele determinar la naturaleza del error.
+R no provee soporte nativo de construcción de condiciones, se deben construir como cualquier objeto.
+```{r}
+condicion <- function(clase, mensaje, llamada = sys.call(-1), ...) {
+  structure(
+    class = c(clase, "condition"),
+    list(message = mensaje, call = llamada, ...)
+  )
+}
+
+condicion("wrong_parameter", "Se ha recibido un parametro erróneo")
+```
+
+Se pueden armar condiciones que hereden de esta condición genérica.
+```{r}
+wrong_parameter_error <- function(mensaje){
+  condicion(c("wrong_paremeter_error", "error"),
+            mensaje = mensaje
+            )
+}
+
+wrong_parameter_error("No se puede dividir por 0")
+```
+
+### Reinicios: un ejemplo práctico.
+
+El sistema de reinicios permite dividir el manejo de errores en dos partes: los *restarts* donde se encuentra el código de recuperación en caso de error y una parte que decide que estrategia usar e invoca al *restart* correspondiente.
+
+Supongamos que tenemos una aplicación que se encarga de parsear logs.
+Esta aplicación posee una función de bajo nivel `parsear_linea(linea)` que recibe una linea, la parsea y devuelve un objeto. Luego tenemos una función de nivel medio `parsear_archivo(archivo)`que recibe un archivo, lee las lineas y se las envía a nuestra función de bajo nivel. Por último tenemos una función de alto nivel que en nuestro caso será la que ejecute el programa.
+
+¿Que pasa cuando nos encontramos con una línea defectuosa en el archivo de log? Típicamente nuestra función de bajo nivel lanzará una excepción. Luego, nuestra función de nivel medio puede decidir que hacer. Por ejemplo, puede atrapar la excepción y continuar la ejecucición ignorando dicha linea defectuosa. Otra alternativa es propagar dicha excepción y que nuestra parte más alta se encargue de solucionarlo. Es un sistema bastante rígido, en el que una vez que una excepción fue lanzada se propaga por el stack sin nunca volver hacia el bajo nivel.
+
+El sistema de reinicios, nos brinda otra alternativa.La función de bajo nivel, por ejemplo, puede declarar estrategias de recuperación en caso de un error. Una vez que lanza una excepción, una función de mayor nivel, puede decidir que estrategia de recuperación utilizar, devolviendo así la ejecución al bajo nivel.
+
+```{r eval=F}
+parsear_linea <- function(linea) {
+  if (linea_bien_formada(linea)) {
+    return(entrada_log(linea))
+  }
+  
+  withRestarts(
+    stop(linea_mal_formada_error(linea)),
+    ignorar_linea = function(x) NULL,
+    usar_valor = function(x) x,
+    arreglar_linea = function(x) f_arreglar_linea(linea)
+  )
+}
+
+parsear_archivo <- function(archivo){
+  lineas <- readLines(archivo)
+  
+  lapply(lineas, parsear_archivo(linea))
+}
+
+main <- function(){
+  withCallingHandlers(
+    linea_mal_formada_error = function() invokeRestart("ignorar_linea"),
+    parsear_archivo("mediciones.log")
+  )
+}
+
+main2 <- function(){
+  withCallingHandlers(
+    linea_mal_formada_error = function() invokeRestart("usar_valor", -1),
+    parsear_archivo("mediciones.log")
+  )
+}
+
+main3 <- function(){
+  withCallingHandlers(
+    linea_mal_formada_error = function() invokeRestart("arreglar_linea"),
+    parsear_archivo("mediciones.log")
+  )
+}
+
+```
+
+### Otros usos
+
+Aunque las condiciones se suelen utilizar para errores, son una herramenta muy poderosa para hacer código que interactúe facilmente entre el bajo y el alto nivel.
+
+Es posible crear aplicaciones en las que el código de bajo nivel advierta condiciones a funciones de más alto nivel y estas decidan que estrategia tomar a continuación.
+
+### Referencias
+
+1. Advanced R - HadleyWickham. Section 8. https://adv-r.hadley.nz/conditions.html
+
+2. Advanced R - Hadley Wickham. Beyond Exception Handling: Conditions and Restarts
+http://adv-r.had.co.nz/beyond-exception-handling.html
+
+3. Beyond Exception Handling: Conditions and Restarts - Peter Seibel (El ejemplo original en Common Lisp) http://www.gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html
+
+4. Condition Systems in an Exceptional Language - Chris Houser (Explicación del mismo ejemplo y como aplica a librerías de Clojure. La explicación aplica de manera muy similar a R) https://www.youtube.com/watch?v=zp0OEDcAro0
+

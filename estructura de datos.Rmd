@@ -1,0 +1,291 @@
+---
+title: "Presentacion Ignacio Janero"
+author: "Ignacio"
+date: "17/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = True)
+```
+#Introduccion
+
+Como ya mencionamos antes R es un lenguaje especializado en la estadistica y en el manejo de grandes volumenes de datos, eso se puede apreciar en este grafico 
+
+![](https://img.blogs.es/anexom/wp-content/uploads/2017/09/Big-Data.jpg)
+
+para eso han hecho incapie en la optimizacion de las estructuras de los datos mas importantes para este tipo de tareas. Esto se ve reflejado en los paquetes mas utilizados en R. 
+
+![](https://149351115.v2.pressablecdn.com/wp-content/uploads/2017/10/package_bar_chart-1-675x675.png)
+
+Las estructuras de datos de las cuales estoy haciendo referencia y R expone su mayor potencial es en los Vectores
+
+## Vectores 
+
+Hay muchos tipos de datos, en este caso voy a hacer incapie en uno de los mas importantes y abarcativos que son 
+los vectores
+
+Los vectores vienen en dos grandes grupos: vectores atómicos y listas. Difieren en términos de los tipos de sus elementos: para los vectores atómicos, todos los elementos deben tener el mismo tipo; Para las listas, los elementos pueden tener diferentes tipos. 
+
+Si bien no es un vector, NULL está estrechamente relacionado con los vectores y, a menudo, cumple la función de un vector genérico de longitud cero. Este diagrama, que ampliaremos a lo largo de este capítulo, ilustra las relaciones básicas.
+
+
+
+## Vectores Atomicos
+Hay cuatro tipos principales de vectores atómicos: lógico, entero, doble y carácter (que contiene cadenas). 
+
+![](https://d33wubrfki0l68.cloudfront.net/eb6730b841e32292d9ff36b33a590e24b6221f43/57192/diagrams/vectors/summary-tree-atomic.png)
+
+aqui se puede apreciar claramente los diferentes tipos.
+
+
+##Escalares
+
+Un escalar es una constante o variable que contiene un dato atómico y unidimensional. Cada uno de los cuatro tipos principales tiene una sintaxis especial para crear un valor individual.
+
+ ![](https://d33wubrfki0l68.cloudfront.net/8a3d360c80da1186b1373a0ff0ddf7803b96e20d/254c6/diagrams/vectors/atomic.png)
+
+Ejemplo de como inicializar un vector:
+```{r}
+x <- c(1,2,3,4)
+```
+
+
+## Valores Perdidos 
+
+R representa valores perdidos o desconocidos, con un valor centinela especial: NA(abreviatura de no aplicable). Los valores perdidos tienden a ser infecciosos: la mayoría de los cálculos que involucran un valor perdido devolverán otro valor perdido
+
+```{r}
+
+NA > 5
+#> [1] NA
+10 * NA
+#> [1] NA
+!NA
+#> [1] NA
+
+```
+
+##Atributos
+
+Los vectores atómicos no incluye una serie de estructuras de datos importantes como matrices, arreglos, factores o date-times. Estos tipos se construyen sobre los vectores atómicos al agregar atributos. Los atributos generalmente deben considerarse efímeros. Por ejemplo, la mayoría de las operaciones pierden la mayoría de los atributos.
+Solo hay dos atributos que se conservan habitualmente:
+
+nombres , un vector de caracteres que le da un nombre a cada elemento.
+dim , abreviatura de dimensiones, un vector entero, utilizado para convertir vectores en matrices o matrices.
+
+      
+  **Nombres**
+  
+  Puede nombrar un vector de tres maneras:    
+      
+```{r}
+
+  x <- c(a = 1, b = 2, c = 3)
+  
+  x <- 1:3
+  names(x) <- c("a", "b", "c")
+  
+  x <- setNames(1:3, c("a", "b", "c"))
+
+```    
+      
+  **Dimensiones**
+  
+  Agregar un dim atributo a un vector le permite comportarse como una matriz bidimensional o un arreglo multidimensional. Las matrices y los arreglos son principalmente herramientas matemáticas y estadísticas, las cuales se utilizan en gran medida en estos lenguajes.
+  
+```{r}
+
+  a <- matrix(1:6, nrow = 2, ncol = 3)
+  
+  b <- array(1:12, c(2, 3, 2))
+  
+  c <- 1:6
+  dim(c) <- c(3, 2)
+
+```   
+      
+  **S3**
+  
+  Uno de los atributos vectoriales más importantes es la clase que subyace al sistema de objetos S3. Tener un atributo de clase  convierte un objeto en un objeto S3 , lo que significa que se comportará de manera diferente a un vector normal cuando se pase  una función genérica. Cada objeto S3 se crea sobre un tipo base y, a menudo, almacena información adicional en otros atributos.
+  
+![](https://d33wubrfki0l68.cloudfront.net/baa19d0ebf9b97949a7ad259b29a1c4ae031c8e2/8e9b8/diagrams/vectors/summary-tree-s3-1.png)
+
+
+##Listas
+
+Las listas son un paso más en la complejidad de los vectores atómicos: cada elemento puede ser de cualquier tipo, no solo vectores. Técnicamente hablando, cada elemento de una lista es en realidad del mismo tipo porque cada elemento es realmente una referencia a otro objeto, que puede ser de cualquier tipo.
+
+
+##Matrices y arreglos
+
+Con los vectores atómicos, el atributo de dimensión se usa comúnmente para crear matrices. Con las listas, el atributo de dimensión se puede usar para crear listas de matrices o listas de arreglos:
+
+```{r}
+
+  l <- list(1:3, "a", TRUE, 1.0)
+  dim(l) <- c(2, 2)
+  l
+  
+  
+  l[[1, 1]]
+
+```
+
+
+Estas estructuras de datos son relativamente complejas, pero pueden ser útiles si desea organizar los objetos en una estructura similar a una cuadrícula. Por ejemplo, si está ejecutando modelos en una cuadrícula espacio-temporal, puede ser más intuitivo almacenar los modelos en una matriz 3D que coincida con la estructura de la cuadrícula.
+
+##Data Frame Y Tibbles 
+
+Los dos vectores S3 más importantes construidos en la parte superior de las listas son dataframes y tibbles.
+
+
+![](https://d33wubrfki0l68.cloudfront.net/9ec5e1f8982238a413847eb5c9bbc5dcf44c9893/bc590/diagrams/vectors/summary-tree-s3-2.png)
+
+Si haces análisis de datos en R, vas a usar data frames. Un data frame es una lista con nombre de vectores con atributos para (columna) names, row.names20 , y su clase, "data.frame":
+
+```{r}
+
+  df1 <- data.frame(x = 1:3, y = letters[1:3])
+
+  attributes(df1)
+
+```
+
+A diferencia de una lista normal, un data frame tiene una restricción adicional: la longitud de cada uno de sus vectores debe ser la misma. Esto le da a los data frames su estructura rectangular y explica por qué comparten las propiedades de ambas matrices y listas
+
+
+Tibbles son proporcionados por el paquete tibble y comparten la misma estructura que los data frame. La única diferencia es que el vector de clase es más largo e incluye tbl_df. Esto permite que los tibbles se comporten de manera diferente en las formas clave.
+
+```{r}
+
+library(tibble)
+
+df2 <- tibble(x = 1:3, y = letters[1:3])
+
+attributes(df2)
+
+```
+
+Diferencias:
+
+    los data frame transforman automáticamente nombres no sintácticos (a menos que check.names = FALSE), los tibbles no lo hacen (aunque imprimen nombres no sintácticos rodeados por `).
+    
+```{r}
+
+  names(data.frame(`1` = 1))
+
+  names(tibble(`1` = 1))
+
+```
+    
+    los data frame reciclan automáticamente las columnas que son un múltiplo entero de la columna más larga, los tibbles solo reciclarán vectores de longitud uno.
+    
+```{r}
+
+  names(data.frame(`1` = 1))
+
+  names(tibble(`1` = 1))
+
+```
+
+
+##Null
+
+NULLes especial porque tiene un tipo único, siempre tiene longitud cero y no puede tener ningún atributo.
+
+Hay dos usos comunes de NULL:
+
+Representar un vector vacío (un vector de longitud cero) de tipo arbitrario. Por ejemplo, si usa c()pero no incluye ningún argumento, obtendrá NULL, y la concatenación NULL a un vector lo dejará sin cambios
+
+Para representar un vector ausente. Por ejemplo, a NULL a menudo se usa como un argumento de función predeterminado, cuando el argumento es opcional pero el valor predeterminado requiere algún cálculo.
+
+
+##Subsetting 
+
+Los operadores de subsetting de R son rápidos y potentes. Dominarlos le permite realizar de manera sucinta operaciones complejas de una manera que pocos otros Lenguajes pueden igualar. Subsetting en R es fácil de aprender pero difícil de dominar porque necesita internalizar una serie de conceptos interrelacionados:
+
+Hay seis formas de subconjuntos de vectores atómicos.
+
+Hay tres operadores de subconjuntos, [[, [, y $.
+
+Los operadores de subconjunto interactúan de manera diferente con diferentes tipos de vectores (por ejemplo, vectores atómicos, listas, factores, matrices y marcos de datos).
+
+Subconjunto es un complemento natural para str(). Si bien le str()muestra todas las piezas de cualquier objeto (su estructura), el subconjunto le permite extraer las piezas que le interesan. Para objetos grandes y complejos, le recomiendo utilizar el Visor interactivo RStudio, con el que puede activar View(my_object).
+
+##Subsetting y asignacion 
+
+Todos los operadores de subsetting se pueden combinar con la asignación para modificar los valores seleccionados de un vector de entrada: esto se denomina subasignación. La forma básica es x[i] <- value:
+    
+```{r}
+
+  x <- 1:5
+  x[c(1, 2)] <- c(101, 102)
+  x
+
+```
+
+Con las listas, puede usar x[[i]] <- NULL para eliminar un componente. Para agregar un literal NULL, use x[i] <- list(NULL)
+
+##Aplicaciones
+
+Los principios descritos anteriormente tienen una amplia variedad de aplicaciones útiles. Algunos de los más importantes se describen a continuación. Mientras que muchos de los principios básicos de subsetting de que ya se han incorporado en funciones como subset(), merge(), dplyr::arrange(), una comprensión más profunda de cómo se han aplicado estos principios será de gran valor cuando se ejecuta en situaciones en las que no existen las funciones que necesitas hacer.
+
+   Tablas de búsqueda
+   
+```{r}
+
+  x <- c("m", "f", "u", "f", "f", "m", "m")
+  lookup <- c(m = "Male", f = "Female", u = NA)
+  lookup[x]
+
+```
+
+   Emparejamiento y fusión a mano
+   
+```{r}
+
+  grades <- c(1, 2, 2, 3, 1)
+
+info <- data.frame(
+  grade = 3:1,
+  desc = c("Excellent", "Good", "Poor"),
+  fail = c(F, F, T)
+)
+
+```
+   
+   Muestras aleatorias y bootstraps
+   
+```{r}
+
+  df <- data.frame(x = c(1, 2, 3, 1, 2), y = 5:1, z = letters[1:5])
+
+  # Randomly reorder
+  df[sample(nrow(df)), ]
+  
+  # Select 3 random rows
+  df[sample(nrow(df), 3), ]
+  
+  # Select 6 bootstrap replicates
+  df[sample(nrow(df), 6, replace = TRUE), ]
+
+```
+
+  Ordenar
+   
+```{r}
+
+  x <- c("b", "c", "a")
+  order(x)
+
+```
+
+  Eliminar columnas de marcos de datos
+  
+```{r}
+  
+  df <- data.frame(x = 1:3, y = 3:1, z = letters[1:3])
+  df$z <- NULL
+  
+```
