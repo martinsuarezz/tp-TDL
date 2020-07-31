@@ -1,0 +1,336 @@
+---
+title: "Presentacion Juan Ignacio Colombo"
+output: html_document
+---
+
+# Origen
+
+* R fue creado por Ross Ihaka y Robert Gentleman en la Universidad de Auckland.
+
+* El lenguaje se baso en una implementacin de S y Scheme.
+
+* El lenguaje es creado en 1991 , para luego ser anunciado en 1993, 1995 usaron licencia GNU y finalmente, en 2000 se lanzo la version beta estable.
+
+* Surge ante la necesidad de una forma de enseñar estadistica a sus alumnos en la Universidad.
+
+# Para que sirve
+
+- Analisis Estadistico
+
+- Algoritmos Machine Learning
+
+- Data Analisis
+
+- Graficar con facilidad
+
+
+
+# Para que no sirve
+
+- Usa mucha memoria
+
+- Velocidad
+
+- Seguridad
+
+# Funciones
+
+### Componentes de una funcion
+
+Una funcion tiene 3 partes:
+
+  1-Parametros
+  
+  2-Cuerpo
+  
+  3-Ambiente
+    
+    
+    f02 <- function(x, y) {
+    # A comment
+    x + y
+    }
+
+    formals(f02)
+    #> $x
+    #> 
+    #> 
+    #> $y
+
+    body(f02)
+    #> {
+    #>     x + y
+    #> }
+
+    environment(f02)
+    #> <environment: R_GlobalEnv>
+
+### Funciones Primitivas
+
+  -No tiene 3 partes como las normales
+  
+    Por ejemplo: 
+        sum
+        #> function (..., na.rm = FALSE)  .Primitive("sum")
+        typeof(sum)
+        #> [1] "builtin"
+        ormals(sum)
+        #> NULL
+        body(sum)
+        #> NULL
+        environment(sum)
+        #> NULL
+        
+  -Cuentan con una ventaja de performance, pero son dificiles de implementar
+  
+### Funciones Primera-Clase
+
+-En R las funciones son objetos que se crean y asocian a una variable
+
+      f01 <- function(x) {
+        sin(1 / x ^ 2)
+      }
+ 
+-Si no la asociamos con una variable, obtenemos una funcion anonima
+
+      integrate(function(x) sin(x) ^ 2, 0, pi)    
+
+-Tambien existen las funciones de cierre
+
+      funs <- list(
+        half = function(x) x / 2,
+        double = function(x) x * 2
+      )
+
+      funs$double(10)
+      #> [1] 20
+      
+### Scope Lexico
+
+  -Se siguen 4 reglas:
+  
+  1- Enmascaramiento de nombres
+      
+  -Los nombres definidos dentro de una funcion enmascaran los nombrados fuera.
+      
+      x <- 10
+      y <- 20
+      g02 <- function() {
+        x <- 1
+        y <- 2
+        c(x, y)
+      }
+      g02()
+      #> [1] 1 2
+      
+      -Si no encuentra una variable en la funcion la busca fuera.
+      x <- 2
+      g03 <- function() {
+        y <- 1
+        c(x, y)
+      }
+      g03()
+      #> [1] 2 1
+      
+  2- Funciones versus variables
+    
+  -Las reglas de scoping definidad arriba se cumplen en funciones tambien.
+  
+      g07 <- function(x) x + 1
+      g08 <- function() {
+        g07 <- function(x) x + 100
+        g07(10)
+      }
+      g08()
+      #> [1] 110
+      
+  3- Un nuevo comienzo
+  
+  -Al llamar una funcion se crea un ambiente nuevo para ejecutar la accion
+  
+    g11 <- function() {
+      if (!exists("a")) {
+        a <- 1
+      } else {
+        a <- a + 1
+      }
+      a
+    }
+
+    g11()
+    g11()
+    
+  4- Busquedad Dinamica
+  
+  -R busca los valores cuando se llama la funcion, no cuando es creada.
+  
+    g12 <- function() x + 1
+    x <- 15
+    g12()
+    #> [1] 16
+
+    x <- 20
+    g12()
+    #> [1] 21
+    
+## Evaluacion Peresoza
+
+  -Los argumentos de funciones solo se evaluan si se accede a ellos.
+  
+    h01 <- function(x) {
+      10
+    }
+    h01(stop("This is an error!"))
+    #> [1] 10
+    
+  
+### Promesas
+
+-La evaluación perezosa está impulsada por una estructura de datos llamada promesa
+
+-Una promesa tiene 3 componentes:
+
+1- Una expresion, que da lugar al calculo retrasado.
+
+2- Un ambiente en donde la expresion debe ser evaluada.
+
+3- Un valor que 
+
+    y <- 10
+    h02 <- function(x) {
+      y <- 100
+      x + 1
+    }
+
+    h02(y)
+    #> [1] 11
+    
+###  Argumentos predeterminados
+
+-Debido a la evaluacion peresoza, los valores predeterminados se pueden definir en termino de otros argumentos, o en terminos de variables definidad mas adelante.
+
+    h04 <- function(x = 1, y = x * 2, z = a + b) {
+      a <- 10
+      b <- 100
+  
+      c(x, y, z)
+    }
+
+    h04()
+    #> [1]   1   2 110
+    
+### dot-dot-dot
+
+-Las funciones pueden tener un argumento especial: ...
+-Con este argumetno las funciones pueden tener un numero adicional de argumentos.
+
+    i01 <- function(y, z) {
+      list(y = y, z = z)
+    }
+
+    i02 <- function(x, ...) {
+      i01(...)
+    }
+
+    str(i02(x = 1, y = 2, z = 3))
+    #> List of 2
+    #>  $ y: num 2
+    #>  $ z: num 3
+    
+  
+- Usando ..N, se accede a los elementos extra por posicion
+
+    i03 <- function(...) {
+      list(first = ..1, third = ..3)
+    }
+    str(i03(1, 2, 3))
+    #> List of 2
+    #>  $ first: num 1
+    #>  $ third: num 3
+    
+- o tambien usando list()
+
+    i04 <- function(...) {
+      list(...)
+    }
+    str(i04(a = 1, b = 2))
+    #> List of 2
+    #>  $ a: num 1
+    #>  $ b: num 2
+
+### Return explicito vs implicito
+
+
+  -Implicito: La ultima expresion evaluada es la que se devuelve
+      
+      j01 <- function(x) {
+        if (x < 10) {
+          0
+        } else {
+          10
+        }
+      }
+      j01(5)
+      #> [1] 0
+      j01(15)
+      #> [1] 10
+      
+    
+  -Explicito: Se llama a return() para devolver un valor.
+  
+    j02 <- function(x) {
+      if (x < 10) {
+        return(0)
+      } else {
+        return(10)
+      }
+    }
+    
+### Valores invisibles.
+
+-Debido a que las funciones imprimen el ultimo valor que se evaluo, se puede impedir esto mediante invisible()
+
+    j03 <- function() 1
+    j03()
+    #> [1] 1
+    j04 <- function() invisible(1)
+    j04()
+      
+
+### Errores
+
+- Si la funcion no puede cumplir su tarea, se debe lanzar un error
+
+    j05 <- function() {
+       stop("I'm an error")
+    return(10)
+    }
+    j05()
+    #> Error in j05(): I'm an error
+    
+
+### Manejador de Salida
+
+-En ocasiones una funcion realiza cambios temporales en el estado global, pero si se llega a un error
+y necesita eliminar estos cambios, se puede con on.exit()
+
+    j06 <- function(x) {
+      cat("Hello\n")
+      on.exit(cat("Goodbye!\n"), add = TRUE)
+  
+      if (x) {
+        return(10)
+      } else {
+        stop("Error")
+      }
+    }
+
+    j06(TRUE)
+    #> Hello
+    #> Goodbye!
+    #> [1] 10
+
+    j06(FALSE)
+    #> Hello
+    #> Error in j06(FALSE): Error
+    #> Goodbye!
