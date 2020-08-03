@@ -1,0 +1,10 @@
+name: apprecommender
+title:
+username:
+account: anewshiny
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2629378
+bundleId: 3457016
+url: https://anewshiny.shinyapps.io/apprecommender/
+when: 1596155942.56147
