@@ -188,7 +188,7 @@ NA > 5
 
 ## Atributos
 
-Los vectores atómicos no incluyen una serie de estructuras de datos importantes como matrices, arreglos, factores o date-times. Estos tipos se construyen sobre los vectores atómicos al agregar atributos. Los atributos generalmente deben considerarse efímeros. Por ejemplo, la mayoría de las operaciones pierden la mayoría de los atributos.
+Los vectores atómicos no incluyen una serie de estructuras de datos importantes como matrices, arreglos o date-times. Estos tipos se construyen sobre los vectores atómicos al agregar atributos. Los atributos generalmente deben considerarse efímeros. Por ejemplo, la mayoría de las operaciones pierden la mayoría de los atributos.
 Solo hay dos atributos que se conservan habitualmente:
 
 - **nombres** , un vector de caracteres que le da un nombre a cada elemento.
@@ -322,13 +322,11 @@ Hay dos usos comunes de `NULL`:
 
 Los operadores de subsetting de R son rápidos y potentes. Dominarlos le permite realizar de manera sucinta operaciones complejas de una manera que pocos otros Lenguajes pueden igualar. Subsetting en R es fácil de aprender pero difícil de dominar porque necesita internalizar una serie de conceptos interrelacionados:
 
-Hay seis formas de subconjuntos de vectores atómicos.
+Hay tres operadores de subsetting: `[[`, `[`, y `$`.
 
-Hay tres operadores de subconjuntos: `[[`, `[`, y `$`.
+Los operadores de subsetting interactúan de manera diferente con diferentes tipos de vectores (por ejemplo, vectores atómicos, listas, factores, matrices y marcos de datos).
 
-Los operadores de subconjunto interactúan de manera diferente con diferentes tipos de vectores (por ejemplo, vectores atómicos, listas, factores, matrices y marcos de datos).
-
-Subconjunto es un complemento natural para `str()`. Si bien le `str()` muestra todas las piezas de cualquier objeto (su estructura), el subconjunto le permite extraer las piezas que le interesan. Para objetos grandes y complejos, le recomiendo utilizar el Visor interactivo RStudio, con el que puede activar `view(my_object)`.
+El subsetting es un complemento natural para `str()`. Si bien le `str()` muestra todas las piezas de cualquier objeto (su estructura), el subsetting le permite extraer las piezas que le interesan. Para objetos grandes y complejos, le recomiendo utilizar el Visor interactivo RStudio.
 
 ## Subsetting y asignación 
 
