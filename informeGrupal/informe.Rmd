@@ -1,0 +1,1226 @@
+---
+title: "75.31 - Teoría del Lenguaje - Análisis del lenguaje R"
+output: html_document
+author: 
+  - Grupo 8
+  - Juan Ignacio Colombo 103471
+  - Ignacio Janeiro 103550
+  - Federico Andres Ramos 101640
+  - Martin Andres Suarez 101540 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(lobstr)
+library(tibble)
+```
+
+# Origen
+
+R fue creado por Ross Ihaka y Robert Gentleman en la universidad de Auckland en 1991 y surge de la necesidad de encontrar
+una nueva forma de enseñar estadistica a alumnos de su facultad. El lenguaje fue anunciado en 1993 y luego, en 1995
+usaron una licencia GNU, convirtiendo a R en software gratuito. Finalmente en el año 2000 se lanzó la version
+beta estable. 
+
+El lenguaje se basó en una implementacion de dos lenguajes ya existentes, siendo estos S y Scheme. Debido a su similitud
+con S y el hecho de que sea compatible con cualquier sistema operativo facilito su migracion y su aumento de popularidad.
+
+
+
+# Para que sirve R
+
+R es un lenguaje de programación cuyo uso está mayormente orientado a las estadísticas, debido a la gran cantidad de 
+herramientas que posee, además de que se creo como herramienta para enseñar estadística. R es un lenguaje que cuenta con 
+más de 10.000 paquetes en su repositorio CRAN. Algunos de estos paquetes, como por ejemplo `readr` facilitan trabajar con
+grandes cantidades de información desordenada, permitiendo ordenar y estructurar los datos para una mejor comprension de los 
+mismos. Además R tiene una gran capacidad gráfica, permitiendonos visualizar toda la información de manera sencilla y con gran
+detalle utilizando librerias como `ggplot2` y `plotly`. Gracias a todo lo mencionado anteriormente, R es un lenguaje con gran 
+capacidad para el análisis de datos y con gran utilidad para el análisis estadístico, siendo una de las principales razones
+por las que se usa el lenguaje.
+
+Una de las desventajas de R es que almacena toda su información en la memoria física, debido a que los objetos de R son almacenados
+en memoria, causando que no sea el lenguaje ideal para trabajar con grandes cantidades de datos. Otro asṕecto a tener en cuenta es que R no 
+tiene un sistema de concurrencia, si bien tiene librerias que nos dan ciertas herramientas, R sigue sin ser una opcion viable si se necesita
+trabajar de forma asincrónica.
+
+# Introducción a R
+
+Como ya mencionamos antes R es un lenguaje especializado en la estadistica y en el manejo de datos, eso se puede apreciar en este grafico 
+
+![](https://img.blogs.es/anexom/wp-content/uploads/2017/09/Big-Data.jpg)
+
+Para eso han hecho incapie en la optimizacion de las estructuras de los datos más importantes para este tipo de tareas. Esto se ve reflejado en los paquetes mas utilizados en R. 
+
+![](https://149351115.v2.pressablecdn.com/wp-content/uploads/2017/10/package_bar_chart-1-675x675.png)
+
+## Para entender un poco R
+
+>“To understand computations in R, two slogans are helpful:
+>
+> * Everything that exists is an object.
+> * Everything that happens is a function call."
+>
+>— John Chambers
+>
+> <img src="https://statweb.stanford.edu/~jmc4/CopyPhoto.jpg" width="250" height="250"/>
+
+## Paradigmas
+
+R es un lenguaje que al igual que Oz es multiparadigma, ya que soporta varios paradigmas, y el usuario puede utilizar el que le parezca más conveniente para resolver el problema.
+R  soporta los paradigmas:
+
+1. Funcional
+2. Vectorial
+3. Imperativo
+4. Procedural
+5. POO
+
+## Tipado Dinámico
+
+R es de tipado dinámico, con la particularidad de que al declarar una variable numérica automáticamente le asigna un double. Ser un lenguaje de tipado dinámico implica que una variable 
+puede tomar cualquier valor, ya sea un entero, un flotante, un carácter en distintos momentos. A diferencia de un tipado estático donde hay que declarar de qué tipo va a ser la variable y 
+este tipo es inalterable.Algunos lenguajes de tipado dinámico como R son, Python, Javascript o Oz, mientras que algunos de tipado estático pueden ser C o C++.
+
+## Lenguaje Interpretado
+
+R es un lenguaje de programación del tipo interpretado. Un lenguaje interpretado es aquel que ejecuta directamente instrucción a instrucción
+utilizando un interprete. Algunos ejemplos de otros lenguajes interpretados son Python, Javascript y R.
+
+
+# Estructuras de control de flujo 
+
+Los bucles son un método de control de flujo para repetir una tarea o conjunto de tareas en un dominio.
+Un ejemplo para obtener la suma acumulativa de un vector de valores en R utilizando un bucle for es:
+
+```{r} 
+  x <- 1:4
+  acumulative_sum <- 0
+  for (i in x){
+    acumulative_sum <- acumulative_sum + x[i]
+  }
+  acumulative_sum 
+```
+
+Otro bucle utilizado es el while, en el siguiente ejemplo se muestra como imprimir un vector de 5 elementos
+utilizando un while :
+
+```{r}
+  x <- 1
+  while(x < 5) 	{
+    x <- x+1; 
+    print(x);
+  }
+```
+
+Finalmente existe el bucle repeat, el cual itera sobre una porción de código hasta encontrarse con un break.
+En el siguiente ejemplo se muestra como imprime nuevamente un vector de 5 elementos, pero esta vez utilizando
+repeat :
+
+```{r}
+  x <- 1
+  repeat {
+    print(x)
+    x = x+1
+    if (x == 6){
+      break
+    }
+  }
+```
+
+
+# Estructuras de datos
+
+## Vectores 
+
+Hay muchos tipos de datos, en este caso vamos a hacer incapie en uno de los más importantes y abarcativos que son 
+los vectores
+
+Los vectores vienen en dos grandes grupos: vectores atómicos y listas. Difieren en términos de los tipos de sus elementos: para los vectores atómicos, todos los elementos deben tener el mismo tipo; para las listas, los elementos pueden tener diferentes tipos. 
+
+Si bien no es un vector, `NULL` está estrechamente relacionado con los vectores y, a menudo, cumple la función de un vector genérico de longitud cero. Este diagrama, que ampliaremos a lo largo de este capítulo, ilustra las relaciones básicas.
+
+
+## Vectores Atomicos
+
+Hay cuatro tipos principales de vectores atómicos: lógico, entero, doble y carácter (que contiene cadenas). 
+
+Aquí se puede apreciar claramente los diferentes tipos:
+
+![](https://d33wubrfki0l68.cloudfront.net/eb6730b841e32292d9ff36b33a590e24b6221f43/57192/diagrams/vectors/summary-tree-atomic.png)
+
+## Escalares
+
+Un escalar es una constante o variable que contiene un dato atómico y unidimensional. Cada uno de los cuatro tipos principales tiene una sintaxis especial para crear un valor individual.
+
+ ![](https://d33wubrfki0l68.cloudfront.net/8a3d360c80da1186b1373a0ff0ddf7803b96e20d/254c6/diagrams/vectors/atomic.png)
+
+Ejemplo de como inicializar un vector:
+```{r}
+x <- c(1,2,3,4)
+```
+
+
+## Valores perdidos 
+
+R representa valores perdidos o desconocidos, con un valor centinela especial: `NA` (abreviatura de no aplicable). Los valores perdidos tienden a ser infecciosos: la mayoría de los cálculos que involucran un valor perdido devolverán otro valor perdido.
+
+```{r}
+
+NA > 5
+#> [1] NA
+10 * NA
+#> [1] NA
+!NA
+#> [1] NA
+
+```
+
+## Atributos
+
+Los vectores atómicos no incluyen una serie de estructuras de datos importantes como matrices, arreglos, factores o date-times. Estos tipos se construyen sobre los vectores atómicos al agregar atributos. Los atributos generalmente deben considerarse efímeros. Por ejemplo, la mayoría de las operaciones pierden la mayoría de los atributos.
+Solo hay dos atributos que se conservan habitualmente:
+
+- **nombres** , un vector de caracteres que le da un nombre a cada elemento.
+- **dim** , abreviatura de dimensiones, un vector entero, utilizado para convertir vectores en matrices.
+
+      
+### Nombres
+  
+Se puede nombrar un vector de tres maneras:    
+      
+```{r}
+
+  x <- c(a = 1, b = 2, c = 3)
+  
+  x <- 1:3
+  names(x) <- c("a", "b", "c")
+  
+  x <- setNames(1:3, c("a", "b", "c"))
+```    
+      
+### Dimensiones
+  
+Se puede agregar un atributo `dim` a un vector. Esto le permite comportarse como una matriz bidimensional o un arreglo multidimensional. Las matrices y los arreglos son principalmente herramientas matemáticas y estadísticas, las cuales se utilizan en gran medida en estos lenguajes.
+  
+```{r}
+
+  a <- matrix(1:6, nrow = 2, ncol = 3)
+  
+  b <- array(1:12, c(2, 3, 2))
+  
+  c <- 1:6
+  dim(c) <- c(3, 2)
+
+```   
+      
+## S3
+  
+Uno de los atributos vectoriales más importantes es la clase que subyace al sistema de objetos S3. Tener un atributo `class` (clase)  convierte un objeto en un objeto S3 , lo que significa que se comportará de manera diferente a un vector normal cuando se pase una función genérica. Cada objeto S3 se crea sobre un tipo base y, a menudo, almacena información adicional en otros atributos.
+  
+![](https://d33wubrfki0l68.cloudfront.net/baa19d0ebf9b97949a7ad259b29a1c4ae031c8e2/8e9b8/diagrams/vectors/summary-tree-s3-1.png)
+
+Profundarizaremos más sobre este tema en la sección **Objetos en R**.
+
+
+## Listas
+
+Las listas son un paso más en la complejidad de los vectores atómicos: cada elemento puede ser de cualquier tipo, no solo vectores. Técnicamente hablando, cada elemento de una lista es en realidad del mismo tipo porque cada elemento es realmente una referencia a otro objeto, que puede ser de cualquier tipo.
+
+
+## Matrices y arreglos
+
+Con los vectores atómicos, el atributo de dimensión se usa comúnmente para crear matrices. Con las listas, el atributo de dimensión se puede usar para crear listas de matrices o listas de arreglos:
+
+```{r}
+
+  l <- list(1:3, "a", TRUE, 1.0)
+  dim(l) <- c(2, 2)
+  l
+  
+  
+  l[[1, 1]]
+
+```
+
+
+Estas estructuras de datos son relativamente complejas, pero pueden ser útiles si desea organizar los objetos en una estructura similar a una cuadrícula. Por ejemplo, si está ejecutando modelos en una cuadrícula espacio-temporal, puede ser más intuitivo almacenar los modelos en una matriz 3D que coincida con la estructura de la cuadrícula.
+
+##Data Frame Y Tibbles 
+
+Los dos vectores S3 más importantes construidos en la parte superior de las listas son dataframes y tibbles.
+
+![](https://d33wubrfki0l68.cloudfront.net/9ec5e1f8982238a413847eb5c9bbc5dcf44c9893/bc590/diagrams/vectors/summary-tree-s3-2.png)
+
+Si haces análisis de datos en R, vas a usar data frames. Un data frame es una lista con nombre de vectores con atributos para (columna) names, row.names20 , y su clase, "data.frame":
+
+```{r}
+
+  df1 <- data.frame(x = 1:3, y = letters[1:3])
+
+  attributes(df1)
+
+```
+
+A diferencia de una lista normal, un data frame tiene una restricción adicional: la longitud de cada uno de sus vectores debe ser la misma. Esto le da a los data frames su estructura rectangular y explica por qué comparten las propiedades de ambas matrices y listas
+
+
+Tibbles son proporcionados por el paquete tibble y comparten la misma estructura que los data frame. La única diferencia es que el vector de clase es más largo e incluye tbl_df. Esto permite que los tibbles se comporten de manera diferente en las formas clave.
+
+```{r}
+
+df2 <- tibble(x = 1:3, y = letters[1:3])
+
+attributes(df2)
+
+```
+
+Diferencias:
+
+    los data frame transforman automáticamente nombres no sintácticos (a menos que check.names = FALSE), los tibbles no lo hacen (aunque imprimen nombres no sintácticos rodeados por `).
+    
+```{r}
+
+  names(data.frame(`1` = 1))
+
+  names(tibble(`1` = 1))
+
+```
+    
+    los data frame reciclan automáticamente las columnas que son un múltiplo entero de la columna más larga, los tibbles solo reciclarán vectores de longitud uno.
+    
+```{r}
+
+  names(data.frame(`1` = 1))
+
+  names(tibble(`1` = 1))
+
+```
+
+## Null
+
+`NULL` es especial porque tiene un tipo único, siempre tiene longitud cero y no puede tener ningún atributo.
+
+Hay dos usos comunes de `NULL`:
+
+- Representar un vector vacío (un vector de longitud cero) de tipo arbitrario. Por ejemplo, si usa c()pero no incluye ningún argumento, obtendrá NULL, y la concatenación NULL a un vector lo dejará sin cambios
+
+- Para representar un vector ausente. Por ejemplo, a NULL a menudo se usa como un argumento de función predeterminado, cuando el argumento es opcional pero el valor predeterminado requiere algún cálculo.
+
+
+## Subsetting 
+
+Los operadores de subsetting de R son rápidos y potentes. Dominarlos le permite realizar de manera sucinta operaciones complejas de una manera que pocos otros Lenguajes pueden igualar. Subsetting en R es fácil de aprender pero difícil de dominar porque necesita internalizar una serie de conceptos interrelacionados:
+
+Hay seis formas de subconjuntos de vectores atómicos.
+
+Hay tres operadores de subconjuntos: `[[`, `[`, y `$`.
+
+Los operadores de subconjunto interactúan de manera diferente con diferentes tipos de vectores (por ejemplo, vectores atómicos, listas, factores, matrices y marcos de datos).
+
+Subconjunto es un complemento natural para `str()`. Si bien le `str()` muestra todas las piezas de cualquier objeto (su estructura), el subconjunto le permite extraer las piezas que le interesan. Para objetos grandes y complejos, le recomiendo utilizar el Visor interactivo RStudio, con el que puede activar `view(my_object)`.
+
+## Subsetting y asignación 
+
+Todos los operadores de subsetting se pueden combinar con la asignación para modificar los valores seleccionados de un vector de entrada: esto se denomina subasignación. La forma básica es `x[i] <- value`:
+    
+```{r}
+
+  x <- 1:5
+  x[c(1, 2)] <- c(101, 102)
+  x
+
+```
+
+Con las listas, se puede usar `x[[i]] <- NULL` para eliminar un componente. Para agregar un literal `NULL`, se usa `x[i] <- list(NULL)`
+
+## Aplicaciones
+
+Los principios descritos anteriormente tienen una amplia variedad de aplicaciones útiles. Algunos de los más importantes se describen a continuación. Mientras que muchos de los principios básicos de subsetting de que ya se han incorporado en funciones como `subset()`, `merge()`, `dplyr::arrange()`, una comprensión más profunda de cómo se han aplicado estos principios será de gran valor cuando se ejecuta en situaciones en las que no existen las funciones que necesitas hacer.
+
+Tablas de búsqueda
+   
+```{r}
+
+  x <- c("m", "f", "u", "f", "f", "m", "m")
+  lookup <- c(m = "Male", f = "Female", u = NA)
+  lookup[x]
+
+```
+
+Emparejamiento y fusión a mano
+   
+```{r}
+
+  grades <- c(1, 2, 2, 3, 1)
+
+info <- data.frame(
+  grade = 3:1,
+  desc = c("Excellent", "Good", "Poor"),
+  fail = c(F, F, T)
+)
+
+```
+   
+Muestras aleatorias y bootstraps
+   
+```{r}
+
+  df <- data.frame(x = c(1, 2, 3, 1, 2), y = 5:1, z = letters[1:5])
+
+  # Randomly reorder
+  df[sample(nrow(df)), ]
+  
+  # Select 3 random rows
+  df[sample(nrow(df), 3), ]
+  
+  # Select 6 bootstrap replicates
+  df[sample(nrow(df), 6, replace = TRUE), ]
+
+```
+
+Ordenar
+   
+```{r}
+
+  x <- c("b", "c", "a")
+  order(x)
+
+```
+
+Eliminar columnas de marcos de datos
+  
+```{r}
+  
+  df <- data.frame(x = 1:3, y = 3:1, z = letters[1:3])
+  df$z <- NULL
+  
+```
+
+# Manejo de la memoria
+
+Entender como R maneja internamente la memoria es fundamental para realizar código eficiente. Por ejemplo, los ciclos `for()` tienen fama de ser extremadamente lentos en este lenguaje, esto es provocado por como se maneja la memoria y como se debe escribir código para evitar incovenientes.
+
+R funciona, similarmente a otros lenguajes, con referencias. Por ejemplo:
+
+```{r}
+x <- c(1, 2, 3)
+```
+
+Este código dice que `x` ahora referencia al vector (1, 2, 3)
+
+![](https://d33wubrfki0l68.cloudfront.net/bd90c87ac98708b1731c92900f2f53ec6a71edaf/ce375/diagrams/name-value/binding-1.png)
+
+```{r}
+y <- x
+```
+
+Ahora tanto `x` como `y` referencian a la misma posición de memoria.
+
+![](https://d33wubrfki0l68.cloudfront.net/bdc72c04d3135f19fb3ab13731129eb84c9170af/f0ab9/diagrams/name-value/binding-2.png)
+
+```{r}
+obj_addr(x)
+obj_addr(y)
+```
+Ahora modifiquemos un valor de `x`
+
+```{r}
+x[1] = 10
+x
+```
+```{r}
+y
+```
+`y` sigue haciendo referencia al vector original, no se modificó.
+
+```{r}
+obj_addr(x)
+obj_addr(y)
+```
+Ahora `y` sigue apuntando a la misma dirección de memoria original, sin embargo `x` cambió. Lo que sucedió al modificar `x`, es que R creó una copia del mismo. Tiene un comportamiento de **copia en modificación** (copy-on-modify).
+
+### Listas
+
+En las listas sucede algo similar. La única diferencia es que en la lista se guardan referencias a los elementos.
+
+```{r}
+l1 <- list(1, 2, 3)
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/dae84980f1586fc4ef47091c91f51a5737b38135/a1403/diagrams/name-value/list.png)
+```{r}
+l2 <- l1
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/52bc0e3da3382cba957a9d83397b6c9200906ce2/c72aa/diagrams/name-value/l-modify-1.png)
+
+```{r}
+l2[[3]] <- 4
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/b844bb5a3443e1344299627f5760e2ae3a9885b5/e1c76/diagrams/name-value/l-modify-2.png)
+
+Al realizar esta modificación se realiza una copia de la lista. La copia sin embargo, no es profunda, solo se copian las referencias a los objetos y no los objetos en sí.
+
+![](https://d33wubrfki0l68.cloudfront.net/b844bb5a3443e1344299627f5760e2ae3a9885b5/e1c76/diagrams/name-value/l-modify-2.png)
+
+### Dataframes
+
+Los dataframes son listas de vectores, por lo tanto se comportan similar que las listas.
+
+```{r}
+d1 <- data.frame(x = c(1, 5, 6), y = c(2, 4, 3))
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/80d8995999aa240ff4bc91bb6aba2c7bf72afc24/95ee6/diagrams/name-value/dataframe.png)
+
+Al modificar una columna, se crea una nueva copia de la misma.
+
+```{r}
+d2 <- d1
+d2[, 2] <- d2[, 2] * 2
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/c19fd7e31bf34ceff73d0fac6e3ea22b09429e4a/23d8d/diagrams/name-value/d-modify-c.png)
+
+Sin embargo, al modificar una fila, se deben copiar nuevamente todas las columnas.
+
+```{r}
+d3 <- d1
+d3[1, ] <- d3[1, ] * 3
+```
+
+![](https://d33wubrfki0l68.cloudfront.net/36df61f54d1ac62e066fb814cb7ba38ea6047a74/facf8/diagrams/name-value/d-modify-r.png)
+
+Esto puede provocar que cierto tipo de código corra extremadamente lento. Por ejemplo, un `for` que recorra todo el dataframe y a cada fila le aplique una función, puede llegar a hacer varias copias de todo el dataframe en cada iteración.
+
+Una solución a esto es convertir los dataframes a listas. El funcionamiento de las listas está implementado con optimizaciones en C que evitan el comportamiento de copy-on-modify y pueden realizar modifcaciones in-place.
+
+Otra solución posible es evitar cuando sea posible el uso de ciclos `for`, `while`, y tratar de programar en un esquema más funcional, con funciones como `vapply()`.
+
+## Tamaño en memoria
+
+R, al funcionar con referencias, hace que el tamaño de muchos objetos sea menor al que uno creería.
+
+```{r}
+x <- runif(100)
+obj_size(x)
+```
+```{r}
+y <- list(x, x, x)
+obj_size(y)
+```
+También existen optimizaciones con las cadenas de caracteres. R no almacena strings, sino referencias a las mismas.
+
+```{r}
+saludo = "hola"
+obj_size(saludo)
+```
+```{r}
+saludo2 = rep("hola", 100)
+obj_size(saludo2)
+```
+
+
+# Funciones
+
+### Componentes de una funcion
+
+Una función tiene 3 partes:
+
+  1 - Parametros
+  
+  2 - Cuerpo
+  
+  3 - Ambiente
+    
+```{r}
+
+  f02 <- function(x, y) {
+    # A comment
+    x + y
+  }
+
+  formals(f02)
+
+```    
+```{r}
+
+  body(f02)
+
+```
+
+```{r}
+
+  environment(f02)
+
+```   
+
+### Funciones Primitivas
+
+No tiene 3 partes como las normales
+  
+```{r}
+
+  sum
+
+```  
+```{r}
+
+  typeof(sum)
+
+```  
+```{r}
+
+  formals(sum)
+
+```  
+```{r}
+
+  environment(sum)
+
+```  
+        
+  Cuentan con una ventaja de performance, pero son difíciles de implementar
+  
+### Funciones Primera-Clase
+
+En R, al ser un lenguaje **funcional**, las funciones son **ciudadanos de primera clase**. Sin embargo se puede decir que las funciones de R no son necesariamente *puras*.
+Dado un input, una función de R no necesariamente devuelve el mismo output. Por ejemplo, `runif()` que devuelve un numero random.
+Además, hay funciones de R que tienen efectos secundarios, como por ejemplo `print()` que imprime por pantalla.
+
+En R las funciones son objetos que se crean y asocian a una variable
+
+```{r}
+
+  f01 <- function(x) {
+        sin(1 / x ^ 2)
+      }
+
+```  
+ 
+Si no la asociamos con una variable, obtenemos una función anónima.
+
+```{r}
+
+  integrate(function(x) sin(x) ^ 2, 0, pi) 
+
+```  
+
+También existen las funciones de cierre
+
+```{r}
+
+  funs <- list(
+    half = function(x) x / 2,
+    double = function(x) x * 2
+  )
+
+  funs$double(10)
+
+```  
+      
+### Scope Lexico
+
+Se siguen las siguientes 4 reglas:
+  
+#### 1- Enmascaramiento de nombres
+      
+Los nombres definidos dentro de una función enmascaran los nombrados fuera.
+
+```{r}
+
+  x <- 10
+  y <- 20
+  g01 <- function() {
+    x <- 1
+    y <- 2
+    c(x, y)
+  }
+  g01()
+
+```  
+ 
+Si no encuentra una variable en la función la busca fuera.
+
+```{r}
+
+  x <- 2
+  g02 <- function() {
+    y <- 1
+    c(x, y)
+  }
+  g02()
+
+```  
+      
+#### 2- Funciones versus variables
+    
+Las reglas de scoping definidas arriba también se cumplen en funciones.
+
+```{r}
+
+  g03 <- function(x) x + 1
+  g04 <- function() {
+    g05 <- function(x) x + 100
+    g05(10)
+  }
+  g04()
+
+```  
+      
+#### 3- Un nuevo comienzo
+  
+Al llamar una función se crea un ambiente nuevo para ejecutar la acción.
+
+```{r}
+
+  g08 <- function() {
+    if (!exists("a")) {
+      a <- 1
+    } else {
+      a <- a + 1
+    }
+    a
+  }
+
+  g08()
+  g08()
+
+```  
+    
+#### 4- Busquedad Dinamica
+  
+R busca los valores cuando se llama la función, no cuando es creada.
+
+```{r}
+  
+  x <- 0
+  g09 <- function() x + 1
+  x <- 15
+  g09()
+
+```  
+
+```{r}
+
+  x <- 20
+  g09()
+
+```  
+
+## Evaluacion Peresoza
+
+Los argumentos de funciones solo se evaluan si se accede a ellos.
+
+```{r}
+
+    h01 <- function(x) {
+      10
+    }
+    h01(stop("This is an error!"))
+
+``` 
+    
+  
+### Promesas
+
+La evaluación perezosa está impulsada por una estructura de datos llamada promesa
+
+Una promesa tiene 3 componentes:
+
+1- Una expresion, que da lugar al calculo retrasado.
+
+2- Un ambiente en donde la expresion debe ser evaluada.
+
+3- Un valor que se espera obtener.
+
+```{r}
+
+  y <- 10
+  h02 <- function(x) {
+    y <- 100
+    x + 1
+  }
+
+  h02(y)
+
+```  
+
+    
+###  Argumentos predeterminados
+
+Debido a la evaluación peresoza, los valores predeterminados se pueden definir en término de otros argumentos, o en términos de variables definidas más adelante.
+
+```{r}
+
+  h03 <- function(x = 1, y = x * 2, z = a + b) {
+    a <- 10
+    b <- 100
+
+    c(x, y, z)
+  }
+
+  h03()
+
+```  
+    
+### dot-dot-dot
+
+Las funciones pueden tener un argumento especial: `...`
+
+Con este argumento las funciones pueden tener un número adicional de argumentos.
+
+```{r}
+
+  i01 <- function(y, z) {
+    list(y = y, z = z)
+  }
+
+  i02 <- function(x, ...) {
+    i01(...)
+  }
+
+  str(i02(x = 1, y = 2, z = 3))
+
+```
+  
+Usando ..N, se accede a los elementos extras por posición
+
+```{r}
+
+  i03 <- function(...) {
+    list(first = ..1, third = ..3)
+  }
+  str(i03(1, 2, 3))
+
+```
+    
+O también usando list()
+
+```{r}
+
+  i04 <- function(...) {
+    list(...)
+  }
+  str(i04(a = 1, b = 2))
+
+```
+
+### Return explicito vs implicito
+
+**Implicito:** la última expresión evaluada es la que se devuelve.
+
+```{r}
+
+  j01 <- function(x) {
+    if (x < 10) {
+      0
+    } else {
+      10
+    }
+  }
+  j01(5)
+  j01(15)
+
+```
+    
+**Explicito:** se llama a return() para devolver un valor.
+  
+```{r}
+
+  j02 <- function(x) {
+    if (x < 10) {
+      return(0)
+    } else {
+      return(10)
+    }
+  }
+
+  j02(5)
+  j02(15)
+
+```
+    
+### Valores invisibles
+
+Debido a que las funciones imprimen el ultimo valor que se evaluó, se puede impedir esto mediante `invisible()`
+
+```{r}
+
+  j03 <- function() 1
+  j04 <- function() invisible(1)
+
+  j03()
+  j04()
+
+```
+
+### Errores
+
+Si la función no puede cumplir su tarea, se debe lanzar un error.
+
+```{r error=TRUE}
+
+  j05 <- function() {
+    stop("I'm an error")
+    return(10)
+  }
+  j05()
+
+```
+    
+### Manejador de Salida
+
+En ocasiones una función realiza cambios temporales en el estado global, pero si se llega a un error y necesita eliminar estos cambios, se puede lograr con `on.exit()`
+
+```{r error=TRUE}
+
+  j06 <- function(x) {
+    cat("Hello\n")
+    on.exit(cat("Goodbye!\n"), add = TRUE)
+
+    if (x) {
+      return(10)
+    } else {
+      stop("Error")
+    }
+  }
+
+  j06(TRUE)
+  
+  j06(FALSE)
+
+```
+
+# Objetos en R
+
+R posee distintios sistemas dedicados a programación orientada a objetos. Aquí mencionaremos 3 de estos sistemas: **S3**, **R6** y **S4**.
+
+## S3
+### Introduccion a S3 
+
+S3 es el primer y más simple paradigma orientado a objetos que tiene R. Un objeto en S3 es un objeto del tipo `base` que tiene al menos un atributo clase (`class`).
+
+Una parte fundamental de S3 son las funciones genéricas, que utiliza diferentes implementaciones dependiendo de la clase que se le pasa como argumento. Lo unico que hace una función genérica es definir una interfaz , y al invocarse, busca la implementacion adecuada para cada objeto. La implementacion especifica para una clase se llama método y es declarada como `nombre_de_funcion.nombre_de_clase(args)`.
+
+### Clases
+
+Como se menciono anteriormente, un objeto debe tener un atributo `class` para ser una instancia de una clase. Este atributo puede ser definido al crearse la estructura o luego, agregondole el atributo `class`.
+
+### Funciones genéricas y métodos
+
+Una función genérica principalmente lo que hace es llamar a un método utilizando `UseMethod()` que utiliza el nombre de la función genérica y los argumentos pasados a la funcion. Para encontrar el método apropiado para cada clase, la funcion `UseMethod()` crea un vector con nombres de cada uno de los metodos e itera por cada posible método. también se puede declarar una pseudo clase llamada `default` para crear un método default para objetos que no tengan un método declarado.
+
+### Herencia
+
+Un objeto puede tener varias clases, permitiendo compartir comportamientos a traves de la herencia. Si al llamarse una función genérica no se encuentra el método de la primer clase, la función genérica busca el método para la siguiente clase declarada en el objeto y asi sucesivamente. Ademas, un método puede usar la funcion `NextMethod()` para que la función genérica salte al método de la clase siguiente declarada en el atributo `class` del objeto.
+
+
+## R6
+
+### Introduccion a R6
+
+El paradigma de objetos de R6 es bastante parecido a cualquier otro paradigma de objetos utilizados en otros lenguajes OOP. A diferencia de S3, los metodos pertencen al objeto y no a genericos, y se llaman utilizando la notacion `objeto$método()`
+
+Otro aspecto importante de R6 es que los objetos son mutables, al crearse se almacena una referencia a ellos.
+
+### Clases y metodos
+
+Para crear clases y definir sus metodos solo se utiliza la funcion `R6Class()`. El primer argumento de la función es el nombre de la clase,  el segundo argumento es una lista con todos los metodos publicos de esa clase y el tercer argumento es una lista con todos los metodos privados de la clase. Luego de usar la funcion `R6Class()` para crear una clase, se inicializa utilizando el método `new()`.
+
+Para cambiar como se construye una clase, se puede declarar el método `initialize`, que cambia el comportamiento del método `new()`, el constructor de la clase.
+
+### Herencia
+
+Para que una clase herede de otra, se le debe pasar el argumento `inheritence` al declarar la clase con la funcion `R6Class()`. Al igual que otros lenguajes orientado a objetos, un método en clase hijo sobreescribe el método de la clase de la que hereda, pero utilizando `super$nombre_metodo` se puede llamar al método de la clase padre.
+
+### Metodos publicos y privados
+
+Metodos y propiedades publicas pueden ser llamadas dentro de la clase utilizando `self$método(args)` o en el caso de una propiedad `self$propiedad`. En cambio, los metodos y propiedades privadas solo pueden ser usadas dentro de la declaracion de la clase, utilizando `private.
+
+### Propiedades activas
+
+Las propiedades activas son metodos que se llaman utilizando la sintaxis de una propiedad. Cada propiedad activa acepta un argumento, si no se le pasa el argumento significa que se esta llamando la propiedad, en cambio, si se le pasa argumento, significa que se le esta asignando un valor a esta propiedad.
+
+
+## S4
+
+El paradigma S4 es muy parecido al paradigma S3 mencionado anteriormente con la diferencia de que usa distintas funciones especializadas para declarar clases, metodos y funciones genericas.
+
+### Clases y Herencia
+
+Para crear una clase, se utiliza la funcion `setClass()` usando el nombre de la clase como primer argumento y sus slots como segundo argumento. Un slot es un componente con nombre dentro del objeto (similar al concepto de propiedad de una clase). una vez creada la clase, se puede instanciar utilizando la funcion `new` pasandole el nombre de la clase y los valores para cada uno de los slots.
+
+Otro argumento importante que se le puede pasar a `setClass()` es `contains`, utilizado para herencia. Este argumento especifica de que clase hereda slots y metodos.
+
+### Funciones Genericas y Metodos
+
+Al igual que en S3, una función genérica lo unico que hace es encontrar el método correspondiende a utilizar dependiendo del objeto pasado como argumento. Para crear una función genérica se utliza `setGeneric()` en el que se le pasa como argumentos el nombre de la función y como segundo argumento una funcion.
+
+Los metodos se definen utilizando la funcion `setMethod()` en el que se pasa como primer argumento una función genérica, como segundo argumento la clase a la que pertenece este método y finalmente como tercer argumento una funcion.
+
+### Herencia y Métodos
+
+S4 perimete herencia múltiple, ademas de permitir usar distintos argumentos en un método para llamar a un meotod en especifica, agregando un mayor complejidad a como las funciones genericas seleccionan el método a usar.
+
+En el caso de una herencia simple y solo con un método declarado para ese genérico, la función genérica primero busca si existe un método para la clase pasada y, si no lo encuentra, busca en su clase padre y asi sucesivamente hasta encontrar el método o quedarse sin clases y lanzar un error.
+
+En el caso de una herencia múltiple con solo un método de la clase declarado para ese genérico, la logica sigue siendo la misma, pero en caso de que haya 2 metodos iguales declarados para dos clases padres distintas, se utliza el método más cercano al objeto pasado. En caso de que ambas esten a la misma distancia del objeto (ejemplo, las dos clases son padres de la clase, por ende estan a la misma distancia) R levanta un warning y se ejecuta el método de la clase que venga primero alfabeticamente.
+
+En el caso de una herencia múltiple con varios metodos de esa clase declarados para ese genérico, se utiliza la misma logica mencionada anteriormente para herencia múltiple, nada más que ademas de buscar si existe el método, busca las distintas combinaciones de argumentos que coinciden con los argumentos pasados, causando que sea más fácil crear ambiguedades.
+
+
+# Sistema de errores
+
+R posee los clásicos manejos de excepciones que existen en lenguajes como Java, C++, Python. Sin embargo, el sistema de R es más flexible y permite la aplicación de *restarts*, un sistema similar al utilizado en Common Lisp.
+
+### Conceptos básicos de excepciones
+
+Para lanzar excepciones, R contiene 3 funciones:
+- `stop()`: Indica errores que detienen la ejecución.
+- `warning()`: Indica advertencias que no detienen la ejecución.
+- `message()`: Tampoco detienen la ejecución, se utilizan para darle información útil al usuario.
+
+Un ejemplo básico:
+```{r error=TRUE}
+my_log <- function(num){
+  if (num <= 0) {stop("No se puede calcular el logaritmo!")}
+  else {log(num)}
+}
+
+my_log(-5)
+```
+### Manejo de expeciones
+
+El clásico paradigma de manejo de excepciones existe en R. Las funciones `try()`, `tryCatch()` permiten atrapar expeciones e ignorarlas o manejarlas.
+
+```{r error=TRUE}
+{
+  my_log(-5)
+  10
+}
+```
+
+```{r}
+{
+  try(my_log(-5))
+  10
+}
+
+```
+Como se ve en estos ejemplos, `try()` muestra por consola el error pero continúa normalmente la ejecución del código. Se puede, con el parámetro `silent=TRUE` que `try()` no muestre el error.
+
+```{r}
+
+tryCatch(my_log(-5),
+         error = function(e) "Hubo un error",
+         warning = function(e) "Hubo una advertencia",
+         message = function(e) "Hubo un mensaje"
+)
+
+```
+
+`tryCatch()` funciona similar a otros lenguajes, recibe el codigo a ejecutar y las distintas maneras de resolver el error.
+
+### Handlers de salida vs Handlers de llamada
+
+`withCallingHandlers()`permite definir handlers que luego de ser ejecutados, continúa con la ejecución normal del código. `tryCatch()`por el contrario, detiene la ejecución del código que lanzó la excepción y no continúa con la misma.
+
+```{r}
+
+withCallingHandlers(
+  {
+    message("Mando un mensaje")
+    2 + 4
+  },
+  message = function(e) print("Hubo un mensaje")
+)
+
+```
+```{r}
+tryCatch(
+  {
+    message("Mando un mensaje")
+    2 + 4
+  },
+  message = function(e) print("Hubo un mensaje")
+)
+```
+
+### Manejo de errores avanzado: condiciones y reinicios
+
+R va más allá del manejo tradicional de errores con la introducción de condiciones y reinicios (*conditions* y *restarts*). Esto otorga un sistema mucho más flexible. 
+
+Los sistemas tradicionales basan su manejo de errores en dos partes de código: la parte encargada del lanzamiento de excepeciones (el clásico `throw()`) y la parte que se encarga de manejarlo (el `catch()`). 
+
+El sistema de condiciones divide el problema en tres partes: una se encarga de lanzar el error, otra se encarga de decidir que estrategia de recuperación utilizar, y otra se encarga de llevar a cabo dicha estrategia.
+
+### Condiciones
+
+Condiciones serían un método para el programador de implementar sus propios errores. Similar a heredar de std::exception en C++ o de Exception en Java.
+
+Las condiciones son objetos S3, cuya clase suele determinar la naturaleza del error.
+R no provee soporte nativo de construcción de condiciones, se deben construir como cualquier objeto.
+```{r}
+condicion <- function(clase, mensaje, llamada = sys.call(-1), ...) {
+  structure(
+    class = c(clase, "condition"),
+    list(message = mensaje, call = llamada, ...)
+  )
+}
+
+condicion("wrong_parameter", "Se ha recibido un parametro erróneo")
+```
+
+Se pueden armar condiciones que hereden de esta condición genérica.
+```{r}
+wrong_parameter_error <- function(mensaje){
+  condicion(c("wrong_paremeter_error", "error"),
+            mensaje = mensaje
+            )
+}
+
+wrong_parameter_error("No se puede dividir por 0")
+```
+
+### Reinicios: un ejemplo práctico.
+
+El sistema de reinicios permite dividir el manejo de errores en dos partes: los *restarts* donde se encuentra el código de recuperación en caso de error y una parte que decide que estrategia usar e invoca al *restart* correspondiente.
+
+Supongamos que tenemos una aplicación que se encarga de parsear logs.
+Esta aplicación posee una función de bajo nivel `parsear_linea(linea)` que recibe una linea, la parsea y devuelve un objeto. Luego tenemos una función de nivel medio `parsear_archivo(archivo)`que recibe un archivo, lee las lineas y se las envía a nuestra función de bajo nivel. Por último tenemos una función de alto nivel que en nuestro caso será la que ejecute el programa.
+
+¿Que pasa cuando nos encontramos con una línea defectuosa en el archivo de log? Típicamente nuestra función de bajo nivel lanzará una excepción. Luego, nuestra función de nivel medio puede decidir que hacer. Por ejemplo, puede atrapar la excepción y continuar la ejecucición ignorando dicha linea defectuosa. Otra alternativa es propagar dicha excepción y que nuestra parte más alta se encargue de solucionarlo. Es un sistema bastante rígido, en el que una vez que una excepción fue lanzada se propaga por el stack sin nunca volver hacia el bajo nivel.
+
+El sistema de reinicios, nos brinda otra alternativa.La función de bajo nivel, por ejemplo, puede declarar estrategias de recuperación en caso de un error. Una vez que lanza una excepción, una función de mayor nivel, puede decidir que estrategia de recuperación utilizar, devolviendo así la ejecución al bajo nivel.
+
+```{r eval=F}
+parsear_linea <- function(linea) {
+  if (linea_bien_formada(linea)) {
+    return(entrada_log(linea))
+  }
+  
+  withRestarts(
+    stop(linea_mal_formada_error(linea)),
+    ignorar_linea = function(x) NULL,
+    usar_valor = function(x) x,
+    arreglar_linea = function(x) f_arreglar_linea(linea)
+  )
+}
+
+parsear_archivo <- function(archivo){
+  lineas <- readLines(archivo)
+  
+  lapply(lineas, parsear_linea(linea))
+}
+
+main <- function(){
+  withCallingHandlers(
+    linea_mal_formada_error = function() invokeRestart("ignorar_linea"),
+    parsear_archivo("mediciones.log")
+  )
+}
+
+main2 <- function(){
+  withCallingHandlers(
+    linea_mal_formada_error = function() invokeRestart("usar_valor", -1),
+    parsear_archivo("mediciones.log")
+  )
+}
+
+main3 <- function(){
+  withCallingHandlers(
+    linea_mal_formada_error = function() invokeRestart("arreglar_linea"),
+    parsear_archivo("mediciones.log")
+  )
+}
+
+```
+
+### Otros usos
+
+Aunque las condiciones se suelen utilizar para errores, son una herramenta muy poderosa para hacer código que interactúe facilmente entre el bajo y el alto nivel.
+
+Es posible crear aplicaciones en las que el código de bajo nivel advierta condiciones a funciones de más alto nivel y estas decidan que estrategia tomar a continuación.
+
+# Comparación de R con otros lenguajes similares
+
+## Comparación con S
+
+Contrario a S, R adoptó un modelo de evaluación, en el cual las definiciones en funciones anidadas son de scope estático.
+Esto quiere decir que las entidades, solo pueden ser usadas desde el bloque al que pertenecen o desde bloques internos.
+En S el valor de las variables libres está determinado por un conjunto de variables globales, en cambio en R está determinado por el ambiente 
+en el que se encuentra.Al usar un scope estático, R al iniciar el programa, agarra una porción de memoria y almacena los objetos en la misma.
+R también maneja su propia memoria, agrandando o achicando según necesite. 
+Al tener todo en memoria, esto genera que R funcione más rápido que S ya que S almacena los objetos en diferentes partes de memoria, 
+normalmente en el .data. El aspecto negativo de R en este caso es que si el programa falla, 
+se pierde el trabajo actual, es por esto que si se está trabajando en algo importante, se recomienda ir guardando y restaurando  la memoria, 
+aunque pueda relentizar el proceso.
+
+
+## Comparación con Python
+
+Los dos lenguajes tienen una gran cantidad de librerias relacionadas a data science y visualizaciones y son faciles de aprender. Ambos son lenguajes
+interpreteados que trabajan con un solo hilo, causando que no haya una gran diferencia de rendimiento. En especial R se utiliza para visualizaciones
+y en el campo de la estadística, mientras que Python se utiliza más en proyectos de machine learning y data science.
+
+## Comparación con Julia
+
+Julia es otro lenguaje open-source al igual que R. Este lenguaje más reciente es mayormente usado para el análisis de datos, al igual que R.
+Las mayores diferencias es que al ser un lenguaje relativamente nuevo comparado con R y Python Julia no cuenta con la gran variedad de librerias 
+que tiene Python y R. La gran ventaja que presenta Julia es su gran velocidad de procesamiento de la información, 
+mucho mayor a R o Python. Entonces si la velocidad es algo importante para nosotros y necesitamos analizar grandes cantidades de datos, 
+es probable que nos convenga utilizar Julia.Por otro lado si no nos importa tanto la velocidad, sino que buscamos resultados mejores y 
+mejores visualizaciones de los mismos, R al ser un lenguaje más antiguo y contar con muchos mas paquetes para trabajar con la información, 
+probablemente sea más conveniente usarlo, antes que Julia.
+
+# Ejemplos de usos de R
+
+## E-Commerce
+Las empresas del comercio online es una de las que más utilizan data science. 
+Debido a que las empresas tienen que trabajar con varios tipos de datos, la cual puede o no estar estructurada , y puede estar en diversos formatos, R 
+les proporciona distintas herramientas para poder unificar estos datos de forma concisa y simple.
+También es muy utilizada para analizar los productos de venta cruzada, es decir cuanto un cliente compra un producto en particular, se utiliza R para recomendar 
+productos similares que le podrían interesar. R también es utilizado por esta industria para los procedimientos estadísticos como el modelado lineal. 
+Estos son necesarios para analizar las compras realizadas por los clientes y predecir las ventas de productos.
+
+## Redes Sociales
+
+R es muy utilizado para el análisis de sentimientos de los usuarios y otras formas de minería de datos. R es muy utilizado para analizar posibles consumidores 
+de productos y marcarlos como clientes para ciertos productos.Una herramienta muy popular es SocialMediaMineR mediante la cual se puede tomar una variedad de URLs y 
+determinar la popularidad y el alcance de las mismas en las redes sociales.
+
+## Salud
+
+Compañías farmacéuticas, genéticas y epidemiológicas utilizan mucho R.R es muy usado para realizar ensayos preclínicos y analizar los datos de seguridad de los medicamentos. 
+R poseen un paquete muy popular llamado Bioconductor el cual posee varias herramientas para analizar los datos genómicos.También se utiliza para el modelado estadístico en el 
+campo de la epidemiología donde los científicos de datos analizan y predicen la propagación de enfermedades.
+
+## Banco
+
+Los bancos utilizan R para modelar el riesgo de crédito y otras formas de analis de riesgos. Mortgage Haircut Model es un modelo utilizado para hacerse cargo de una propiedad en caso 
+de un incumplimiento de préstamo. Este paquete implica la distribución del precio de venta, la volatilidad del precio de venta y el cálculo de déficit esperado. R también es utilizado junto con 
+Hadoop para facilitar el análisis de calidad del cliente, la segmentación del cliente y la retención. The Bank of America, utiliza R para la información financiera. Con las herramientas que proporciona el lenguaje el banco 
+puede analizar las pérdidas financieras y utilizar filtrar y visualizar los datos de manera sencilla con librerias como `ggplot2`. Otro banco que utiliza R es J.P Morgan que,  en su caso, es utilizado para la detección de fraudes, 
+gracias a los algoritmos de machine learning, les es más fácil predecir los fraudes y las irregularidades en los patrones de transacción. 
+Por último R tambien es usado para calcular el valor de por vida de los clientes, para la segmentación de clientes y el análisis preventivo en tiempo real.
+
+### Referencias
+
+#### R
+
+1. Advanced R - HadleyWickham. https://adv-r.hadley.nz/
+
+#### Manejo de excepciones
+
+2. Advanced R - Hadley Wickham. Beyond Exception Handling: Conditions and Restarts
+http://adv-r.had.co.nz/beyond-exception-handling.html
+
+3. Beyond Exception Handling: Conditions and Restarts - Peter Seibel (El ejemplo original en Common Lisp) http://www.gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html
+
+4. Condition Systems in an Exceptional Language - Chris Houser (Explicación del mismo ejemplo y como aplica a librerías de Clojure. La explicación aplica de manera muy similar a R) https://www.youtube.com/watch?v=zp0OEDcAro0
+
+
+
+
