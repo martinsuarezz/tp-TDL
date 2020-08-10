@@ -1188,6 +1188,34 @@ es probable que nos convenga utilizar Julia. Por otro lado si no nos importa tan
 mejores visualizaciones de los mismos, R al ser un lenguaje más antiguo y contar con muchos mas paquetes para trabajar con la información, 
 probablemente sea más conveniente usarlo, antes que Julia.
 
+# Benchmarks
+
+![](images/benchmark1.png)
+
+![](images/benchmark2.png)
+
+# Estadísticas del lenguaje
+
+## Usos según la industria
+![](images/uses.png)
+
+## Paquetes más utilizados
+![](images/packages.png)
+
+## Estadísticas de uso de R
+
+R se encuentra, según el último índice TIOBE (agosto 2020) como el octavo lenguaje más popular. Es un salto de 12 puestos, en comparación a agosto 2019, cuando se ubicaba en el puesto 20°.
+
+La firma RedMonk ubica a R como el lenguaje 13° más popular a Junio de 2020
+
+![](https://zdnet4.cbsistatic.com/hub/i/r/2020/07/28/14a50514-99c8-4a16-bfc8-16e6716fc30b/resize/1200xauto/1776e515c7f99727c28874aad3e6ae5a/rankings-over-time-2020-06-2048x16341.png)
+
+## Comparación de salarios
+
+R se úbica como uno de los lenguajes mejores pagos.
+
+![](images/salary.png)
+
 # Ejemplos de usos de R
 
 ## E-Commerce
@@ -1225,14 +1253,16 @@ Por último R tambien es usado para calcular el valor de por vida de los cliente
 
 1. Advanced R - HadleyWickham. https://adv-r.hadley.nz/
 
+2. Índice TIOBE de lenguajes más populares: https://www.tiobe.com/tiobe-index/
+
 #### Manejo de excepciones
 
-2. Advanced R - Hadley Wickham. Beyond Exception Handling: Conditions and Restarts
+3. Advanced R - Hadley Wickham. Beyond Exception Handling: Conditions and Restarts
 http://adv-r.had.co.nz/beyond-exception-handling.html
 
-3. Beyond Exception Handling: Conditions and Restarts - Peter Seibel (El ejemplo original en Common Lisp) http://www.gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html
+4. Beyond Exception Handling: Conditions and Restarts - Peter Seibel (El ejemplo original en Common Lisp) http://www.gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html
 
-4. Condition Systems in an Exceptional Language - Chris Houser (Explicación del mismo ejemplo y como aplica a librerías de Clojure. La explicación aplica de manera muy similar a R) https://www.youtube.com/watch?v=zp0OEDcAro0
+5. Condition Systems in an Exceptional Language - Chris Houser (Explicación del mismo ejemplo y como aplica a librerías de Clojure. La explicación aplica de manera muy similar a R) https://www.youtube.com/watch?v=zp0OEDcAro0
 
 
 
