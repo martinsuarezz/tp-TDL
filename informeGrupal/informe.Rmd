@@ -3,11 +3,13 @@ title: "75.31 - Teoría del Lenguaje - Análisis del lenguaje R"
 output: html_document
 author: 
   - Grupo 8
-  - Juan Ignacio Colombo 103471
-  - Ignacio Janeiro 103550
-  - Federico Andres Ramos 101640
-  - Martin Andres Suarez 101540 
+  - Colombo, Juan Ignacio - 103471
+  - Janeiro, Ignacio - 103550
+  - Ramos, Federico Andrés - 101640
+  - Suarez, Martín Andrés - 101540 
 ---
+![](https://www.logolynx.com/images/logolynx/c3/c3b7ed5d007115f23b737150df873247.png
+)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -34,14 +36,23 @@ herramientas que posee, además de que se creo como herramienta para enseñar es
 más de 10.000 paquetes en su repositorio CRAN. Algunos de estos paquetes, como por ejemplo `readr` facilitan trabajar con
 grandes cantidades de información desordenada, permitiendo ordenar y estructurar los datos para una mejor comprension de los 
 mismos. Además R tiene una gran capacidad gráfica, permitiendonos visualizar toda la información de manera sencilla y con gran
-detalle utilizando librerias como `ggplot2` y `plotly`. Gracias a todo lo mencionado anteriormente, R es un lenguaje con gran 
-capacidad para el análisis de datos y con gran utilidad para el análisis estadístico, siendo una de las principales razones
-por las que se usa el lenguaje.
+detalle utilizando librerias como `ggplot2` y `plotly`.
 
-Una de las desventajas de R es que almacena toda su información en la memoria física, debido a que los objetos de R son almacenados
-en memoria, causando que no sea el lenguaje ideal para trabajar con grandes cantidades de datos. Otro asṕecto a tener en cuenta es que R no 
-tiene un sistema de concurrencia, si bien tiene librerias que nos dan ciertas herramientas, R sigue sin ser una opcion viable si se necesita
-trabajar de forma asincrónica.
+## ¿Por qué usar R?
+
+- Es libre y de código abierto.
+- Tiene una comunidad muy fuerte.
+- Un lenguaje hecho desde la base y con una gran catidad de librerías para análisis estadístico, Machine Learning, visualización de información.
+- Tiene paquetes muy interesantes, RStudio es un IDE muy completo, RMarkdown permite mostrar fácilmente resultados obtenidos y Shiny permite realizar apps web.
+- Un lenguaje hecho desde la base para análisis estadís
+
+## ¿Por qué no usar R?
+
+- No es un lenguaje muy eficiente. No es demasiado rápido y usa bastante memoria.
+- Al ser muy usado en Machine Learning mucho del código que uno puede encontrar no está muy bien estructurado.
+- Programar en R sin tener los concomientos de como funciona el lenguaje puede producir código **extremadamente lento**.
+- La seguridad no es fuerte del lenguaje.
+- No posee soporte nativo para programación multihilo.
 
 # Introducción a R
 
@@ -1138,9 +1149,9 @@ main3 <- function(){
 
 ```
 
-### Otros usos
+### Otros usos del sistema de condiciones y reinicios
 
-Aunque las condiciones se suelen utilizar para errores, son una herramenta muy poderosa para hacer código que interactúe facilmente entre el bajo y el alto nivel.
+Aunque las condiciones y reinicios se suelen utilizar para errores, son una herramenta muy poderosa para hacer código que interactúe facilmente entre el bajo y el alto nivel.
 
 Es posible crear aplicaciones en las que el código de bajo nivel advierta condiciones a funciones de más alto nivel y estas decidan que estrategia tomar a continuación.
 
@@ -1161,9 +1172,11 @@ aunque pueda relentizar el proceso.
 
 ## Comparación con Python
 
-Los dos lenguajes tienen una gran cantidad de librerias relacionadas a data science y visualizaciones y son faciles de aprender. Ambos son lenguajes
-interpreteados que trabajan con un solo hilo, causando que no haya una gran diferencia de rendimiento. En especial R se utiliza para visualizaciones
+Los dos lenguajes tienen una gran cantidad de librerias relacionadas a data science y visualizaciones y son fáciles de aprender. Ambos son lenguajes
+interpreteados por lo que tienen rendimientos similares. En especial R se utiliza para visualizaciones
 y en el campo de la estadística, mientras que Python se utiliza más en proyectos de machine learning y data science.
+
+Pandas, una de las librerías más conocidas de dataframes para Python basa mucho de sus sistemas en R.
 
 ## Comparación con Julia
 
@@ -1171,7 +1184,7 @@ Julia es otro lenguaje open-source al igual que R. Este lenguaje más reciente e
 Las mayores diferencias es que al ser un lenguaje relativamente nuevo comparado con R y Python Julia no cuenta con la gran variedad de librerias 
 que tiene Python y R. La gran ventaja que presenta Julia es su gran velocidad de procesamiento de la información, 
 mucho mayor a R o Python. Entonces si la velocidad es algo importante para nosotros y necesitamos analizar grandes cantidades de datos, 
-es probable que nos convenga utilizar Julia.Por otro lado si no nos importa tanto la velocidad, sino que buscamos resultados mejores y 
+es probable que nos convenga utilizar Julia. Por otro lado si no nos importa tanto la velocidad, sino que buscamos resultados mejores y 
 mejores visualizaciones de los mismos, R al ser un lenguaje más antiguo y contar con muchos mas paquetes para trabajar con la información, 
 probablemente sea más conveniente usarlo, antes que Julia.
 
@@ -1197,9 +1210,9 @@ Compañías farmacéuticas, genéticas y epidemiológicas utilizan mucho R.R es 
 R poseen un paquete muy popular llamado Bioconductor el cual posee varias herramientas para analizar los datos genómicos.También se utiliza para el modelado estadístico en el 
 campo de la epidemiología donde los científicos de datos analizan y predicen la propagación de enfermedades.
 
-## Banco
+## Entidades Financieras
 
-Los bancos utilizan R para modelar el riesgo de crédito y otras formas de analis de riesgos. Mortgage Haircut Model es un modelo utilizado para hacerse cargo de una propiedad en caso 
+Los bancos utilizan R para modelar el riesgo de crédito y otras formas de análisis de riesgos. Mortgage Haircut Model es un modelo utilizado para hacerse cargo de una propiedad en caso 
 de un incumplimiento de préstamo. Este paquete implica la distribución del precio de venta, la volatilidad del precio de venta y el cálculo de déficit esperado. R también es utilizado junto con 
 Hadoop para facilitar el análisis de calidad del cliente, la segmentación del cliente y la retención. The Bank of America, utiliza R para la información financiera. Con las herramientas que proporciona el lenguaje el banco 
 puede analizar las pérdidas financieras y utilizar filtrar y visualizar los datos de manera sencilla con librerias como `ggplot2`. Otro banco que utiliza R es J.P Morgan que,  en su caso, es utilizado para la detección de fraudes, 
